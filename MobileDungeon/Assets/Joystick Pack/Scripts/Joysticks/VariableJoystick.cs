@@ -45,7 +45,7 @@ public class VariableJoystick : Joystick
     {
         if(joystickType != JoystickType.Fixed)
             background.gameObject.SetActive(false);
-
+        Debug.Log("Dispara");
         base.OnPointerUp(eventData);
     }
 

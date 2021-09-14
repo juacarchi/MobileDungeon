@@ -18,35 +18,47 @@ public class TopDownCharacterController : MonoBehaviour
     }
     private void Update()
     {
+        bool isAiming = PlayerManager.instance.GetIsAiming();
         move.x = joystickMovement.Horizontal;
         move.y = joystickMovement.Vertical;
-
+        move.Normalize();
         if (move.x < 0)
         {
             rendererPlayer.flipX = true;
-            weapon.transform.localScale = new Vector2(1, -1);
+            if (!isAiming)
+            {
+                weapon.transform.localScale = new Vector2(1, -1);
+            }
         }
         else if (move.x > 0)
         {
             rendererPlayer.flipX = false;
-            weapon.transform.localScale = new Vector2(1, 1);
-        }
-        else
-        {
-            if (rendererPlayer.flipX)
-            {
-                weapon.transform.localScale = new Vector2(-1, 1);
-            }
-            else
+            if (!isAiming)
             {
                 weapon.transform.localScale = new Vector2(1, 1);
             }
-
+        }
+        else
+        {
+            if (!isAiming)
+            {
+                if (rendererPlayer.flipX)
+                {
+                    weapon.transform.localScale = new Vector2(-1, 1);
+                }
+                else
+                {
+                    weapon.transform.localScale = new Vector2(1, 1);
+                }
+            }
         }
     }
     private void FixedUpdate()
     {
-        weapon.transform.right = move;
+        if (!PlayerManager.instance.GetIsAiming())
+        {
+            weapon.transform.right = move;
+        }
         rb2D.MovePosition(rb2D.position + move * speed * Time.fixedDeltaTime);
     }
 }
