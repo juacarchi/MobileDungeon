@@ -11,7 +11,8 @@ public class VariableJoystick : Joystick
     [SerializeField] private JoystickType joystickType = JoystickType.Fixed;
 
     private Vector2 fixedPosition = Vector2.zero;
-
+    bool pointUp;
+    bool pointDown;
     public void SetMode(JoystickType joystickType)
     {
         this.joystickType = joystickType;
@@ -23,7 +24,7 @@ public class VariableJoystick : Joystick
         else
             background.gameObject.SetActive(false);
     }
-
+    
     protected override void Start()
     {
         base.Start();
@@ -38,16 +39,20 @@ public class VariableJoystick : Joystick
             background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
             background.gameObject.SetActive(true);
         }
+        
         base.OnPointerDown(eventData);
+        pointUp = false;
+        pointDown = true;
     }
 
     public override void OnPointerUp(PointerEventData eventData)
     {
         if(joystickType != JoystickType.Fixed)
             background.gameObject.SetActive(false);
-        Debug.Log("Dispara");
+        GunSystem.instance.OnPointerUp();
         base.OnPointerUp(eventData);
     }
+    
 
     protected override void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)
     {
@@ -58,6 +63,7 @@ public class VariableJoystick : Joystick
         }
         base.HandleInput(magnitude, normalised, radius, cam);
     }
+    
 }
 
 public enum JoystickType { Fixed, Floating, Dynamic }
